@@ -2,7 +2,6 @@
 - name: Initialize Kubernetes master with kubeadm init.
   command: >
     kubeadm init
-    --pod-network-cidr={{ kubernetes_pod_network_cidr }}
     --ignore-preflight-errors={{ kubernetes_ignore_preflight_errors }}
     {{ kubernetes_kubeadm_init_extra_opts }}
 
