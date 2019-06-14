@@ -37,7 +37,9 @@
 
 # Set up nodes.
 - name: Get the kubeadm join command from the Kubernetes master.
-  command: kubeadm token create --print-join-command
+  # kubeadm join command does not work on BGP based networks. We therefore need to shadow the network with a docker container as a workaround.
+  # This should be resolved after this was merged: https://github.com/kubernetes/kubernetes/pull/69578/
+  command: docker run -it --rm -v /etc/kubernetes/admin.conf:/kubeconfig wise2c/kubeadm-version:v{{ kubernetes_version }} kubeadm token create --print-join-command --kubeconfig=/kubeconfig
   changed_when: false
   when: kubernetes_role == 'master'
   register: kubernetes_join_command_result
