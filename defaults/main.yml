@@ -1,16 +1,16 @@
 ---
+kubernetes_version: '1.13'
+kubernetes_version_rhel_package: '1.13.3'
+
 kubernetes_packages:
-  - name: kubelet
+  - name: 'kubelet={{ kubernetes_version }}-00'
     state: present
-  - name: kubectl
+  - name: 'kubectl={{ kubernetes_version }}-00'
     state: present
-  - name: kubeadm
+  - name: 'kubeadm={{ kubernetes_version }}-00'
     state: present
   - name: kubernetes-cni
     state: present
-
-kubernetes_version: '1.13'
-kubernetes_version_rhel_package: '1.13.3'
 
 kubernetes_role: master
 
