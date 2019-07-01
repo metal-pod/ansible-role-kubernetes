@@ -26,11 +26,12 @@
     dest: ~/.kube/config
     state: link
 
+# FI-TS manual change to upstream kube-flannel.yml: need to have --iface=lo in args of kube-flannel container
 - name: Configure Flannel networking.
   command: "{{ item }}"
   with_items:
-    - kubectl apply -f {{ kubernetes_flannel_manifest_file_rbac }}
-    - kubectl apply -f {{ kubernetes_flannel_manifest_file }}
+    - kubectl apply -f kube-flannel-rbac.yml
+    - kubectl apply -f kube-flannel.yml
   register: flannel_result
   changed_when: "'created' in flannel_result.stdout"
 
