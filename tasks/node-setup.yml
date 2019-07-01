@@ -3,7 +3,7 @@
   # kubeadm join command does not work on BGP based networks. We therefore need to shadow the network with a docker container as a workaround.
   # This should be resolved after this was merged: https://github.com/kubernetes/kubernetes/pull/69578/
   # Needs to be killed, as it also tries for the kubelet to start; cannot be untangled (fetch & start happens both in kubelet-start phase)
-  shell: timeout --signal=SIGKILL 10 docker run -it --stop-signal 2 --rm -v /etc/kubernetes/admin.conf:/kubeconfig -v /var/lib/kubelet:/var/lib/kubelet -v /etc/kubernetes:/etc/kubernetes wise2c/kubeadm-version:v{{ kubernetes_version }} {{ kubernetes_join_command }} --skip-phases=preflight,control-plane-join
+  shell: timeout --signal=SIGKILL 30 docker run -it --stop-signal 2 --rm -v /etc/kubernetes/admin.conf:/kubeconfig -v /var/lib/kubelet:/var/lib/kubelet -v /etc/kubernetes:/etc/kubernetes wise2c/kubeadm-version:v{{ kubernetes_version }} {{ kubernetes_join_command }} --skip-phases=preflight,control-plane-join
   args:
     creates: /etc/kubernetes/kubelet.conf
   failed_when: false
