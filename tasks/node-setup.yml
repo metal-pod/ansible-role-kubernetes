@@ -1,6 +1,16 @@
 ---
-- name: Join node to Kubernetes master
-  shell: >
-    {{ kubernetes_join_command }} --ignore-preflight-errors={{ kubernetes_ignore_preflight_errors }}
-    creates=/etc/kubernetes/kubelet.conf
+- name: Fetch kubelet config for node to join the cluster
+  # kubeadm join command does not work on BGP based networks. We therefore need to shadow the network with a docker container as a workaround.
+  # This should be resolved after this was merged: https://github.com/kubernetes/kubernetes/pull/69578/
+  # Needs to be killed, as it also tries for the kubelet to start; cannot be untangled (fetch & start happens both in kubelet-start phase)
+  command: docker stop -t 10 $(docker run -it -d --stop-signal 2 --rm -v /etc/kubernetes/admin.conf:/kubeconfig -v /var/lib/kubelet:/var/lib/kubelet -v /etc/kubernetes:/etc/kubernetes wise2c/kubeadm-version:v{{ kubernetes_version }} {{ kubernetes_join_command }} --skip-phases=preflight,control-plane-join)
+  args:
+    creates: /etc/kubernetes/kubelet.conf
   tags: ['skip_ansible_lint']
+  register: kubernetes_join_fetch_cmd_result
+
+- name: Join node to Kubernetes master
+  command: {{ kubernetes_join_command }} --skip-phases=preflight,kubelet-start
+  when: kubernetes_join_fetch_cmd_result.changed
+  tags: ['skip_ansible_lint']
+  register: kubernetes_join_command_result
