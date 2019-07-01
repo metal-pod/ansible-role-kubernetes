@@ -10,7 +10,7 @@
   register: kubernetes_join_fetch_cmd_result
 
 - name: Join node to Kubernetes master
-  command: {{ kubernetes_join_command }} --skip-phases=preflight,kubelet-start
+  command: "{{ kubernetes_join_command }} --skip-phases=preflight,kubelet-start"
   when: kubernetes_join_fetch_cmd_result.changed
   tags: ['skip_ansible_lint']
   register: kubernetes_join_command_result
