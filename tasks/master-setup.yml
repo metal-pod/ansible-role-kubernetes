@@ -26,12 +26,20 @@
     dest: ~/.kube/config
     state: link
 
+- name: Copy kubernetes manifests to remote
+  copy:
+    src: "{{ item }}"
+    dest: /root/
+  with_items:
+    - kube-flannel-rbac.yml
+    - kube-flannel.yml
+
 # FI-TS manual change to upstream kube-flannel.yml: need to have --iface=lo in args of kube-flannel container
 - name: Configure Flannel networking.
   command: "{{ item }}"
   with_items:
-    - kubectl apply -f kube-flannel-rbac.yml
-    - kubectl apply -f kube-flannel.yml
+    - kubectl apply -f /root/kube-flannel-rbac.yml
+    - kubectl apply -f /root/kube-flannel.yml
   register: flannel_result
   changed_when: "'created' in flannel_result.stdout"
 
