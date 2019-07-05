@@ -17,7 +17,13 @@
   when: kubernetes_join_fetch_cmd_result is changed
 
 - name: Stop kubeadm_join_fetch container
-  command: docker stop kubeadm_join_fetch && docker rm kubeadm_join_fetch
+  command: docker stop kubeadm_join_fetch
+  failed_when: false
+  when: kubernetes_join_fetch_cmd_result is changed
+
+- name: Remove kubeadm_join_fetch container
+  command: docker rm kubeadm_join_fetch
+  failed_when: false
   when: kubernetes_join_fetch_cmd_result is changed
 
 - name: Join node to Kubernetes master
