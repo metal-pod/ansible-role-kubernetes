@@ -3,11 +3,11 @@ kubernetes_version: '1.13'
 kubernetes_version_rhel_package: '1.13.3'
 
 kubernetes_packages:
-  - name: 'kubelet={{ kubernetes_version }}-00'
+  - name: kubelet
     state: present
-  - name: 'kubectl={{ kubernetes_version }}-00'
+  - name: kubectl
     state: present
-  - name: 'kubeadm={{ kubernetes_version }}-00'
+  - name: kubeadm
     state: present
   - name: kubernetes-cni
     state: present
